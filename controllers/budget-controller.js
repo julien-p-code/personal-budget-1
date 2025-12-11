@@ -5,8 +5,12 @@ let envelopeIdCounter = 1;
 let totalBudget = 0;
 let availableBudget = 0;
 
+//////////////////////////////////
+////// Budget initialization /////
+//////////////////////////////////
+
 // Function to validate and return total and available budget.
-const totalBudgetSafeGuardFunction = (num) => {
+const setTotalBudget = (num) => {
     if (typeof num !== 'number' || isNaN(num) || num < 0) {
         throw new Error('Invalid budget: budget must be a non-negative number');
     } else {
@@ -14,6 +18,11 @@ const totalBudgetSafeGuardFunction = (num) => {
         availableBudget = num;
     }
 };
+
+//////////////////////////////////
+//////// Create envelope /////////
+//////////////////////////////////
+
 
 // Function to create a new budget envelope.
 function createEnvelope(name, budget) {
@@ -40,6 +49,10 @@ function createEnvelope(name, budget) {
 
     return envelope;
 };
+
+//////////////////////////////////
+//////// Modify envelope /////////
+//////////////////////////////////
 
 function modifyEnvelope(id, newName, newBudget) {
   if (!id) {
@@ -73,6 +86,10 @@ function modifyEnvelope(id, newName, newBudget) {
   return envelope;
 };
 
+//////////////////////////////////
+//////// Delete envelope /////////
+//////////////////////////////////
+
 function deleteEnvelope(id) {
     if (!id) {
         throw new Error('Invalid input: envelope ID is required');
@@ -94,8 +111,27 @@ function deleteEnvelope(id) {
     return deletedEnvelope;
 };
 
+///////////////////////////////////
+//////////// Getters //////////////
+///////////////////////////////////
+
+function getEnvelopes() {
+    return envelopes;
+};
+
+function getAvailableBudget() {
+    return availableBudget;
+};
+
+function getTotalBudget() {
+    return totalBudget;
+};
+
 module.exports = {
-    totalBudgetSafeGuardFunction,
+    getEnvelopes,
+    getAvailableBudget,
+    getTotalBudget,
+    setTotalBudget,
     createEnvelope,
     modifyEnvelope,
     deleteEnvelope,
