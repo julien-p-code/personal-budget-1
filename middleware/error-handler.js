@@ -1,9 +1,17 @@
 // middleware/error-handler.js
 const errorHandler = (err, req, res, next) => {
-    console.error(err.stack);
+  const status = err.status || 500;
 
-    // Customize error response based on error type if needed.
-    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  // Log the error stack trace for server errors.
+  if (status >= 500) {
+    console.error(err.stack);
+  }
+
+  // Send JSON response with error message.
+  return res.status(status).json({
+    success: false,
+    message: err.message || 'Internal Server Error',
+  });
 };
 
 module.exports = errorHandler;

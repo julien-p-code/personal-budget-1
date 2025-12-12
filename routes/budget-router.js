@@ -70,15 +70,6 @@ budgetRouter.put('/envelopes/:id', (req, res, next) => {
         });
     }
 
-    const envelope = getEnvelopes().find(env => env.id === id);
-
-    if (!envelope) {
-        return res.status(404).json({
-            success: false,
-            message: 'Envelope not found'
-        });
-    }
-
     if (typeof name !== 'string' || name.trim() === '' ||
         !Number.isFinite(allocatedAmountNum) || allocatedAmountNum < 0) {
         return res.status(400).json({
@@ -107,22 +98,9 @@ budgetRouter.delete('/envelopes/:id', (req, res, next) => {
         });
     }
 
-    const envelope = getEnvelopes().find(env => env.id === id);
-
-    if (!envelope) {
-        return res.status(404).json({
-            success: false,
-            message: 'Envelope not found'
-        });
-    }
-
     deleteEnvelope(id);
 
-    res.status(200).json({
-        success: true,
-        message: 'Envelope deleted successfully',
-        availableBudget: getAvailableBudget(),
-    });
+    res.status(204).send();
 });
 
 // Route to get all envelopes.

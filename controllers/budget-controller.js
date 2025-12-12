@@ -1,3 +1,5 @@
+const httpError = require('../errors/httpError');
+
 let envelopes = [];
 
 let envelopeIdCounter = 1;
@@ -11,8 +13,8 @@ let availableBudget = 0;
 
 // Function to validate and return total and available budget.
 const setTotalBudget = (num) => {
-    if (typeof num !== 'number' || isNaN(num) || num < 0) {
-        throw new Error('Invalid budget: budget must be a non-negative number');
+    if (!Number.isFinite(num) || num < 0) {
+        throw httpError(400, 'Invalid budget: budget must be a non-negative number');
     } else {
         totalBudget = num;
         availableBudget = num;
@@ -27,11 +29,11 @@ const setTotalBudget = (num) => {
 // Function to create a new budget envelope.
 function createEnvelope(name, budget) {
     if (typeof name !== 'string' || typeof budget !== 'number' || budget < 0) {
-        throw new Error('Invalid input: expected a string for name and a non-negative number for budget');
+        throw httpError(400, 'Invalid input: expected a string for name and a non-negative number for budget');
     };
 
     if (budget > availableBudget) {
-        throw new Error('Invalid budget: budget exceeds total available budget');
+        throw httpError(400, 'Invalid budget: budget exceeds total available budget');
     };
 
     // Update available budget.
@@ -55,25 +57,25 @@ function createEnvelope(name, budget) {
 //////////////////////////////////
 
 function modifyEnvelope(id, newName, newBudget) {
-  if (!id) {
-    throw new Error('Invalid input: envelope ID is required');
-  }
-
-  if (typeof newName !== 'string' || typeof newBudget !== 'number' || newBudget < 0) {
-    throw new Error('Invalid input: expected a string for name and a non-negative number for budget');
+  if (!Number.isFinite(id) || id < 0) {
+    throw httpError(400, 'Invalid envelope id');
   }
 
   // Find the existing envelope once
   const envelope = envelopes.find(env => env.id === id);
   if (!envelope) {
-    throw new Error('Envelope not found');
+    throw httpError(404, 'Envelope not found');
+  }
+
+  if (!Number.isFinite(newBudget) || newBudget < 0) {
+    throw httpError(400, 'Invalid budget amount');
   }
 
   // Money available for THIS envelope = availableBudget + current envelope budget
   const deltaBudget = availableBudget + envelope.budget;
 
   if (newBudget > deltaBudget) {
-    throw new Error('Invalid budget: budget exceeds total available budget');
+    throw httpError(400, 'Invalid budget: budget exceeds total available budget');
   }
 
   // Update available budget after reallocating
@@ -91,13 +93,13 @@ function modifyEnvelope(id, newName, newBudget) {
 //////////////////////////////////
 
 function deleteEnvelope(id) {
-    if (!id) {
-        throw new Error('Invalid input: envelope ID is required');
+    if (!Number.isFinite(id) || id < 0) {
+        throw httpError(400, 'Invalid envelope id');
     }
 
     const envelopeIndex = envelopes.findIndex(env => env.id === id);
     if (envelopeIndex === -1) {
-        throw new Error('Envelope not found');
+        throw httpError(404, 'Envelope not found');
     }
 
     const deletedEnvelope = envelopes[envelopeIndex];
