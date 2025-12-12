@@ -6,7 +6,7 @@ This project was completed as part of the **Codecademy Back-End Engineer Career 
 
 ---
 
-## 🚀 Features
+## Features
 
 - Initialize a total budget
 - Create, read, update, and delete budget envelopes
@@ -16,7 +16,7 @@ This project was completed as part of the **Codecademy Back-End Engineer Career 
 
 ---
 
-## 🧱 Architecture
+## Architecture
 
 The project follows a clear separation of concerns:
 
@@ -40,7 +40,7 @@ The project follows a clear separation of concerns:
 
 ---
 
-## 📦 API Endpoints
+## API Endpoints
 
 ### Initialize total budget
 **POST** `/init`
@@ -107,7 +107,7 @@ Returns `204 No Content`
 
 ---
 
-## ⚠️ Error Handling
+## Error Handling
 
 - Uses a centralized global error handler
 - Controllers throw typed HTTP errors (`httpError(status, message)`)
@@ -126,13 +126,13 @@ Example error response:
 
 ---
 
-## 🧪 Testing
+## Testing
 
 All endpoints were tested manually using **Postman**.
 
 ---
 
-## 🛠️ Installation & Usage
+## Installation & Usage
 
 ### Install dependencies
 ```bash
@@ -151,7 +151,7 @@ npm run dev
 
 ---
 
-## 📚 What I Learned
+## What I Learned
 
 - Designing a REST API with proper HTTP semantics
 - Implementing business logic in controllers
@@ -161,7 +161,7 @@ npm run dev
 
 ---
 
-## 🔮 Possible Extensions
+## Possible Extensions
 
 - Persist data using PostgreSQL
 - Batch operations (bulk envelope creation, batch transfers)
@@ -170,8 +170,8 @@ npm run dev
 
 ---
 
-## 👤 Author
+## Author
 
-**Julien**  
+**Julien Perret**  
 GitHub: `julien-p-code`
 
