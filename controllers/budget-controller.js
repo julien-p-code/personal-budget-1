@@ -57,36 +57,67 @@ function createEnvelope(name, budget) {
 //////////////////////////////////
 
 function modifyEnvelope(id, newName, newBudget) {
-  if (!Number.isFinite(id) || id < 0) {
-    throw httpError(400, 'Invalid envelope id');
-  }
+    if (!Number.isFinite(id) || id < 0) {
+        throw httpError(400, 'Invalid envelope id');
+    }
 
-  // Find the existing envelope once
-  const envelope = envelopes.find(env => env.id === id);
-  if (!envelope) {
-    throw httpError(404, 'Envelope not found');
-  }
+    // Find the existing envelope once
+    const envelope = envelopes.find(env => env.id === id);
+    if (!envelope) {
+        throw httpError(404, 'Envelope not found');
+    }
 
-  if (!Number.isFinite(newBudget) || newBudget < 0) {
-    throw httpError(400, 'Invalid budget amount');
-  }
+    if (!Number.isFinite(newBudget) || newBudget < 0) {
+        throw httpError(400, 'Invalid budget amount');
+    }
 
-  // Money available for THIS envelope = availableBudget + current envelope budget
-  const deltaBudget = availableBudget + envelope.budget;
+    // Money available for THIS envelope = availableBudget + current envelope budget
+    const deltaBudget = availableBudget + envelope.budget;
 
-  if (newBudget > deltaBudget) {
-    throw httpError(400, 'Invalid budget: budget exceeds total available budget');
-  }
+    if (newBudget > deltaBudget) {
+        throw httpError(400, 'Invalid budget: budget exceeds total available budget');
+    }
 
-  // Update available budget after reallocating
-  availableBudget = deltaBudget - newBudget;
+    // Update available budget after reallocating
+    availableBudget = deltaBudget - newBudget;
 
-  // Mutate the existing envelope.
-  envelope.name = newName;
-  envelope.budget = newBudget;
+    // Mutate the existing envelope.
+    envelope.name = newName;
+    envelope.budget = newBudget;
 
-  return envelope;
+    return envelope;
 };
+
+function transferBetweenEnvelopes(fromId, toId, amount) {
+    if (!Number.isFinite(fromId) || fromId < 0 || !Number.isFinite(toId) || toId < 0) {
+        throw httpError(400, 'Invalid envelope id');
+    }
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+        throw httpError(400, 'Invalid transfer amount');
+    }
+
+    const fromEnvelope = envelopes.find(env => env.id === fromId);
+    const toEnvelope = envelopes.find(env => env.id === toId);
+
+    if (!fromEnvelope) {
+        throw httpError(404, 'Source envelope not found');
+    }
+    if (!toEnvelope) {
+        throw httpError(404, 'Target envelope not found');
+    }
+
+    if (fromEnvelope.budget < amount) {
+        throw httpError(400, 'Insufficient funds in the source envelope');
+    }
+    fromEnvelope.budget -= amount;
+    toEnvelope.budget += amount;
+
+    return {
+        fromEnvelope,
+        toEnvelope
+    };
+}
 
 //////////////////////////////////
 //////// Delete envelope /////////
@@ -130,6 +161,7 @@ function getTotalBudget() {
 };
 
 module.exports = {
+    transferBetweenEnvelopes,
     getEnvelopes,
     getAvailableBudget,
     getTotalBudget,
