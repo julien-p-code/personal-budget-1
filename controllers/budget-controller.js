@@ -39,7 +39,7 @@ function createEnvelope(name, budget) {
 
     // Create a new envelope object.
     const envelope = {
-        id: `${envelopeIdCounter++}`,
+        id: envelopeIdCounter++,
         name: name,
         budget: budget
     };
@@ -79,7 +79,7 @@ function modifyEnvelope(id, newName, newBudget) {
   // Update available budget after reallocating
   availableBudget = deltaBudget - newBudget;
 
-  // Mutate the existing envelope instead of pushing a new one
+  // Mutate the existing envelope.
   envelope.name = newName;
   envelope.budget = newBudget;
 
