@@ -97,6 +97,34 @@ budgetRouter.put('/envelopes/:id', (req, res, next) => {
     });
 });
 
+budgetRouter.delete('/envelopes/:id', (req, res, next) => {
+    const id = Number(req.params.id);
+
+    if (!Number.isFinite(id) || id < 0) {
+        return res.status(400).json({
+            success: false,
+            message: 'Invalid envelope id'
+        });
+    }
+
+    const envelope = getEnvelopes().find(env => env.id === id);
+
+    if (!envelope) {
+        return res.status(404).json({
+            success: false,
+            message: 'Envelope not found'
+        });
+    }
+
+    deleteEnvelope(id);
+
+    res.status(200).json({
+        success: true,
+        message: 'Envelope deleted successfully',
+        availableBudget: getAvailableBudget(),
+    });
+});
+
 // Route to get all envelopes.
 budgetRouter.get('/status', (req, res, next) => {
     res.status(200).json({
